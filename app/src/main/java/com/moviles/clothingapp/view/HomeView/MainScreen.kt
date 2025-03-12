@@ -28,7 +28,7 @@ fun MainScreen(
         Column(modifier = Modifier.padding(paddingValues)) {
             SearchBar()
             QuickActions()
-            PromoBanner(bannerType = banner.value)
+            PromoBanner(bannerType = banner.value, navController = navController)
             CategorySection(categoryList = categoryList)
             FeaturedProducts(homeViewModel)
         }

@@ -3,14 +3,18 @@ package com.moviles.clothingapp.navigation
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import com.moviles.clothingapp.view.Discover.WeatherCategoryScreen
 import com.moviles.clothingapp.view.HomeView.MainScreen
 import com.moviles.clothingapp.view.Login.CreateAccountScreen
 import com.moviles.clothingapp.view.Login.LoginScreen
 import com.moviles.clothingapp.view.Login.ResetPasswordScreen
 import com.moviles.clothingapp.viewmodel.HomeViewModel
 import com.moviles.clothingapp.viewmodel.LoginViewModel
+import com.moviles.clothingapp.viewmodel.PostViewModel
 import com.moviles.clothingapp.viewmodel.ResetPasswordViewModel
 import com.moviles.clothingapp.viewmodel.WeatherViewModel
 
@@ -53,5 +57,15 @@ fun AppNavigation(navController: NavHostController,
         }
 
         // Add more pages below:
+        composable(
+            route = "category/{categoryId}",
+            arguments = listOf(navArgument("categoryId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val categoryId = backStackEntry.arguments?.getString("categoryId") ?: "sale"
+            val postViewModel: PostViewModel = viewModel()
+            WeatherCategoryScreen(categoryId = categoryId, navController, viewModel = postViewModel)
+        }
+
+
     }
 }

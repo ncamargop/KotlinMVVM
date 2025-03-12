@@ -16,14 +16,16 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.moviles.clothingapp.R
 import com.moviles.clothingapp.ui.theme.dmSansFamily
 import com.moviles.clothingapp.viewmodel.WeatherViewModel
+import androidx.compose.foundation.clickable
 
 
 /* Dynamic Promo banner (image and text) depending on user's weather */
 @Composable
-fun PromoBanner(bannerType: WeatherViewModel.BannerType?) {
+fun PromoBanner(bannerType: WeatherViewModel.BannerType?, navController: NavController) {
     val imageRes = when (bannerType) {
         WeatherViewModel.BannerType.LIGHT_CLOTHING -> R.drawable.light_clothing_banner
         WeatherViewModel.BannerType.WARM_CLOTHING -> R.drawable.warm_clothing_banner
@@ -40,13 +42,25 @@ fun PromoBanner(bannerType: WeatherViewModel.BannerType?) {
         WeatherViewModel.BannerType.NO_WEATHER_DATA, null -> "Mejores precios"
     }
 
+    // Categories for navigation
+    val categoryId = when (bannerType) {
+        WeatherViewModel.BannerType.LIGHT_CLOTHING -> "summer"
+        WeatherViewModel.BannerType.WARM_CLOTHING -> "winter"
+        WeatherViewModel.BannerType.RAINY_WEATHER -> "rain"
+        WeatherViewModel.BannerType.COMFORTABLE_WEATHER -> "casual"
+        WeatherViewModel.BannerType.NO_WEATHER_DATA, null -> "sale"
+    }
+
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
-            .height(150.dp),
-            contentAlignment = Alignment.Center
+            .height(150.dp)
+            .clickable {
+                navController.navigate("category/$categoryId")
+            },
+        contentAlignment = Alignment.Center
 
     ) {
         Image(
