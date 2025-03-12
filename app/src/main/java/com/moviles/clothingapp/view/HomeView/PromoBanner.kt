@@ -30,7 +30,7 @@ fun PromoBanner(bannerType: WeatherViewModel.BannerType?, navController: NavCont
         WeatherViewModel.BannerType.LIGHT_CLOTHING -> R.drawable.light_clothing_banner
         WeatherViewModel.BannerType.WARM_CLOTHING -> R.drawable.warm_clothing_banner
         WeatherViewModel.BannerType.RAINY_WEATHER -> R.drawable.rainy_weather_banner
-        WeatherViewModel.BannerType.COMFORTABLE_WEATHER -> R.drawable.comfortable_weather_banner
+        WeatherViewModel.BannerType.CLOUDY_WEATHER -> R.drawable.cloudy_weather_banner
         WeatherViewModel.BannerType.NO_WEATHER_DATA, null -> R.drawable.promo_image
     }
 
@@ -38,7 +38,7 @@ fun PromoBanner(bannerType: WeatherViewModel.BannerType?, navController: NavCont
         WeatherViewModel.BannerType.LIGHT_CLOTHING -> "Ropa ligera para el calor!"
         WeatherViewModel.BannerType.WARM_CLOTHING -> "Mantente abrigado con estos productos"
         WeatherViewModel.BannerType.RAINY_WEATHER -> "Especial para días lluviosos"
-        WeatherViewModel.BannerType.COMFORTABLE_WEATHER -> "Clima perfecto para ropa casual"
+        WeatherViewModel.BannerType.CLOUDY_WEATHER -> "Las Mejores Prendas para Días nublados"
         WeatherViewModel.BannerType.NO_WEATHER_DATA, null -> "Mejores precios"
     }
 
@@ -47,7 +47,7 @@ fun PromoBanner(bannerType: WeatherViewModel.BannerType?, navController: NavCont
         WeatherViewModel.BannerType.LIGHT_CLOTHING -> "summer"
         WeatherViewModel.BannerType.WARM_CLOTHING -> "winter"
         WeatherViewModel.BannerType.RAINY_WEATHER -> "rain"
-        WeatherViewModel.BannerType.COMFORTABLE_WEATHER -> "casual"
+        WeatherViewModel.BannerType.CLOUDY_WEATHER -> "cloudy"
         WeatherViewModel.BannerType.NO_WEATHER_DATA, null -> "sale"
     }
 

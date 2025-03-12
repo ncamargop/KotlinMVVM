@@ -103,7 +103,7 @@ fun getCategoryTitle(categoryId: String): String {
         "summer" -> "Ropa Ligera para el Calor"
         "winter" -> "Ropa Abrigada"
         "rain" -> "Especial para Días Lluviosos"
-        "casual" -> "Ropa Casual"
+        "cloudy" -> "Las Mejores Prendas para Días nublados "
         "sale" -> "Mejores Precios"
         else -> "Productos"
     }
