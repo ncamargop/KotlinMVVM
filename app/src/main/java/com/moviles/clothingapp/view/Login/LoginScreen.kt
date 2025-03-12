@@ -12,15 +12,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.moviles.clothingapp.viewmodel.LoginViewModel
+import com.moviles.clothingapp.viewmodel.WeatherViewModel
 import kotlinx.coroutines.delay
 
 @Composable
-fun LoginScreen(loginViewModel: LoginViewModel, onNavigateToHome: () -> Unit, navController: NavHostController) {
+fun LoginScreen(loginViewModel: LoginViewModel, onNavigateToHome: () -> Unit,
+                navController: NavHostController, weatherViewModel: WeatherViewModel) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    // Observar si ocurre un error
+    /* Observe if any errors occur in login */
     val signInErrorMessage by loginViewModel.signInErrorMessage.collectAsState()
+
+    /* Launch process for dynamic PromoBanner - based on weather */
+    LaunchedEffect(Unit){
+        weatherViewModel.fetchWeatherData()
+    }
 
     Column(
         modifier = Modifier

@@ -21,6 +21,7 @@ class PostRepository {
 
     private val apiService: ApiService = retrofit.create(ApiService::class.java)
 
+    // Fetch all products
     suspend fun fetchRepository(): List<PostData>? {
         return try {
             val response = apiService.fetchClothes()
@@ -36,6 +37,20 @@ class PostRepository {
         }
     }
 
+
+    // Fetch products by category
+    suspend fun fetchProductsByCategory(categoryId: String): List<PostData>? {
+        return try {
+            val response = apiService.fetchClothesByCategory(categoryId)
+            if (response.isSuccessful) response.body() else null
+        } catch (e: Exception) {
+            Log.e("PostRepository", "Error fetching category: ${e.message}")
+            null
+        }
+    }
+
+
+
     /* Retrieves information using FAST API, testing with this return format:
     *       Retrofit retrieves the information which has this return format:
     *       [{name: "", price:"", brand:"", image:""}, {...}, ...]
@@ -45,5 +60,11 @@ class PostRepository {
     interface ApiService {
         @GET("clothing")
         suspend fun fetchClothes(): Response<List<PostData>>
+
+
+        @GET("clothing/category/{categoryId}") // Fetch by category
+        suspend fun fetchClothesByCategory(@retrofit2.http.Path("categoryId") categoryId: String): Response<List<PostData>>
     }
+
+
 }

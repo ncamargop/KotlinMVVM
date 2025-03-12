@@ -1,8 +1,11 @@
 package com.moviles.clothingapp
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.Firebase
@@ -11,11 +14,28 @@ import com.google.firebase.auth.auth
 import com.moviles.clothingapp.navigation.AppNavigation
 import com.moviles.clothingapp.viewmodel.LoginViewModel
 import com.moviles.clothingapp.viewmodel.ResetPasswordViewModel
+import com.moviles.clothingapp.viewmodel.WeatherViewModel
+import android.Manifest
+import androidx.activity.result.contract.ActivityResultContracts
+
+
 
 class MainActivity : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var resetPasswordViewModel: ResetPasswordViewModel
+    private lateinit var weatherViewModel: WeatherViewModel
+
+    // Inside your MainActivity class
+    private var locationPermissionGranted = false
+
+    // Create permission launcher
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        locationPermissionGranted = permissions.entries.all { it.value }
+        weatherViewModel = WeatherViewModel(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,9 +43,34 @@ class MainActivity : ComponentActivity() {
         loginViewModel = LoginViewModel(auth)
         resetPasswordViewModel = ResetPasswordViewModel(auth)
 
+        // Request location permissions
+        requestLocationPermissions()
+
         setContent {
             val navController = rememberNavController()
-            AppNavigation(navController, loginViewModel, resetPasswordViewModel) //Pass the viewmodel.
+            AppNavigation(navController, loginViewModel, resetPasswordViewModel, weatherViewModel)
+        }
+    }
+
+    private fun requestLocationPermissions() {
+        when {
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                // Permissions already granted
+                locationPermissionGranted = true
+                weatherViewModel = WeatherViewModel(this)
+            }
+
+            else -> {
+                requestPermissionLauncher.launch(
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    )
+                )
+            }
         }
     }
 }
