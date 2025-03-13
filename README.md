@@ -24,12 +24,12 @@ git add .
 git commit -m "Descripción del cambio"
 ```
 
-4. Subir la feature a github
+4. Subir la feature a github (opcional, para reviews y demas)
 ```bash
 git push origin feature/nombre-feature
 ```
 
-5. Cerrar la rama de la feature:
+5. Cerrar la rama de la feature (al ejecutar se borra la rama localmente y remoto):
 ```bash
 git flow feature finish nombre-de-la-feature
 ````
