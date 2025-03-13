@@ -34,6 +34,7 @@ fun PromoBanner(bannerType: WeatherViewModel.BannerType?, navController: NavCont
         WeatherViewModel.BannerType.NO_WEATHER_DATA, null -> R.drawable.promo_image
     }
 
+    /* Custom banner messages */
     val bannerText = when (bannerType) {
         WeatherViewModel.BannerType.LIGHT_CLOTHING -> "Ropa ligera para el calor!"
         WeatherViewModel.BannerType.WARM_CLOTHING -> "Mantente abrigado con estos productos"
@@ -42,13 +43,13 @@ fun PromoBanner(bannerType: WeatherViewModel.BannerType?, navController: NavCont
         WeatherViewModel.BannerType.NO_WEATHER_DATA, null -> "Mejores precios"
     }
 
-    // Categories for navigation
+    /* Updated categories for navigation: We use this variables (e.g. Frio) to retrieve clothes with that category from API. */
     val categoryId = when (bannerType) {
-        WeatherViewModel.BannerType.LIGHT_CLOTHING -> "summer"
-        WeatherViewModel.BannerType.WARM_CLOTHING -> "winter"
-        WeatherViewModel.BannerType.RAINY_WEATHER -> "rain"
-        WeatherViewModel.BannerType.CLOUDY_WEATHER -> "cloudy"
-        WeatherViewModel.BannerType.NO_WEATHER_DATA, null -> "sale"
+        WeatherViewModel.BannerType.LIGHT_CLOTHING -> "Calor"
+        WeatherViewModel.BannerType.WARM_CLOTHING -> "Frio"
+        WeatherViewModel.BannerType.RAINY_WEATHER -> "Lluvia"
+        WeatherViewModel.BannerType.CLOUDY_WEATHER -> "Nublado"
+        WeatherViewModel.BannerType.NO_WEATHER_DATA, null -> "Oferta"
     }
 
 

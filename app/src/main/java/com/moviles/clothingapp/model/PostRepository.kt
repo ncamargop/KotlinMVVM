@@ -39,7 +39,24 @@ class PostRepository {
 
 
     // Fetch products by category
-    suspend fun fetchProductsByCategory(categoryId: String): List<PostData>? {
+    suspend fun fetchPostsFiltered(): List<PostData>? {
+        return try {
+            val response = apiService.fetchClothesFiltered()
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                Log.e("PostRepository", "Response failed: ${response.code()}")
+                null
+            }
+        } catch (e: Exception) {
+            Log.e("PostRepository", "Error: ${e.message}")
+            null
+        }
+    }
+
+
+
+    suspend fun fetchPostsByCategory(categoryId: String): List<PostData>? {
         return try {
             val response = apiService.fetchClothesByCategory(categoryId)
             if (response.isSuccessful) response.body() else null
@@ -60,6 +77,9 @@ class PostRepository {
     interface ApiService {
         @GET("clothing")
         suspend fun fetchClothes(): Response<List<PostData>>
+
+        @GET("clothing") //TODO
+        suspend fun fetchClothesFiltered(): Response<List<PostData>>
 
 
         @GET("clothing/category/{categoryId}") // Fetch by category

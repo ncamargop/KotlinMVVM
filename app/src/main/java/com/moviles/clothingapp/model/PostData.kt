@@ -10,7 +10,11 @@ data class PostData(
     @Json(name="price") val price: String,
     @Json(name="brand") val brand: String,
     @Json(name="category") val category: String,
-    @Json(name="image") val image: String
+    @Json(name="image") val image: String,
+    @Json(name="color") val color: String,
+    @Json(name="size") val size: String,
+    @Json(name="group") val group: String
+
 )
 
 

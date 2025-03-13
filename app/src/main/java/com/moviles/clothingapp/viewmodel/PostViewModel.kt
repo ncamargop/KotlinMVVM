@@ -15,11 +15,23 @@ class PostViewModel : ViewModel() {
     val posts: StateFlow<List<PostData>> get() = _posts
 
 
-    // Fetch products by category
+    init {
+        fetchPostsFiltered()
+    }
+
+    private fun fetchPostsFiltered() {
+        viewModelScope.launch {
+            val result = repository.fetchPostsFiltered() // Ensure repository is returning data
+            _posts.value = result ?: emptyList()
+        }
+    }
+
+
+    /* Fetch products by category (weather) */
     fun fetchPostsByCategory(categoryId: String) {
         viewModelScope.launch {
             try {
-                val result = repository.fetchProductsByCategory(categoryId)
+                val result = repository.fetchPostsByCategory(categoryId)
                 _posts.value = result ?: emptyList()
             } catch (e: Exception) {
                 Log.e("PostViewModel", "Error fetching category $categoryId: ${e.message}")
