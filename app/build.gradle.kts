@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.googleService)
+    id("com.google.firebase.firebase-perf")
 }
 
 
@@ -70,6 +71,7 @@ dependencies {
     // Firebase auth
     implementation(platform("com.google.firebase:firebase-bom:33.10.0"))
     implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-perf")
 
 
     implementation(libs.androidx.core.ktx)
@@ -84,6 +86,7 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.android)
     implementation(libs.firebase.auth.ktx)
     implementation(libs.play.services.location)
+    implementation(libs.play.services.measurement.api)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

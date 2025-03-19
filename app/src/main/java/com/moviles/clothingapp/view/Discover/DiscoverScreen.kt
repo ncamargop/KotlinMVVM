@@ -15,6 +15,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,6 +27,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.firebase.perf.FirebasePerformance
+import com.google.firebase.perf.metrics.Trace
 import com.moviles.clothingapp.view.HomeView.BottomNavigationBar
 import com.moviles.clothingapp.view.HomeView.SearchBar
 import com.moviles.clothingapp.viewmodel.PostViewModel
@@ -43,6 +46,8 @@ import com.moviles.clothingapp.viewmodel.PostViewModel
 fun DiscoverScreen(navController: NavController, viewModel: PostViewModel, query: String) {
     val posts by viewModel.posts.collectAsState()
     var searchQuery by remember { mutableStateOf(query) }
+    val trace: Trace = FirebasePerformance.getInstance().newTrace("DiscoverScreen_trace")
+    trace.start()
 
     /* Filter states - they can remain as that or change as user interacts */
     var showFilterDialog by remember { mutableStateOf(false) }
@@ -52,6 +57,13 @@ fun DiscoverScreen(navController: NavController, viewModel: PostViewModel, query
     var selectedGroup by remember { mutableStateOf("Todos") }
     var minPrice by remember { mutableStateOf("") }
     var maxPrice by remember { mutableStateOf("") }
+
+
+    LaunchedEffect(posts) {
+        if (posts.isNotEmpty()) {
+            trace.stop()
+        }
+    }
 
 
     Scaffold( /* This needs to be here to have the bottom navigation bar. */
@@ -136,4 +148,5 @@ fun DiscoverScreen(navController: NavController, viewModel: PostViewModel, query
             onMaxPriceChange = { maxPrice = it }
         )
     }
+
 }

@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -12,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.moviles.clothingapp.viewmodel.HomeViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.firebase.perf.FirebasePerformance
+import com.google.firebase.perf.metrics.Trace
 import com.moviles.clothingapp.viewmodel.WeatherViewModel
 
 
@@ -24,6 +27,11 @@ fun MainScreen(
     val banner = weatherViewModel.bannerType.observeAsState()
     val searchText = remember { mutableStateOf("") } // Store search text
     Log.d("MainScreen", "Observed banner value: ${banner.value}")
+
+    val trace: Trace = remember { FirebasePerformance.getInstance().newTrace("MainScreen_Loading") }
+    LaunchedEffect(Unit) {
+        trace.start() // Start tracing when screen loads
+    }
 
     Scaffold(
         bottomBar = { BottomNavigationBar(navController) }
@@ -42,5 +50,10 @@ fun MainScreen(
 
         }
 
+    }
+
+    // Stop trace metric (ms) when banner has been loaded
+    LaunchedEffect(banner.value) {
+        trace.stop()
     }
 }
