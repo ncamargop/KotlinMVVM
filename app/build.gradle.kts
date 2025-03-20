@@ -2,8 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.googleService)
+    //(libs.plugins.googleService)
     id("com.google.firebase.firebase-perf")
+    id("com.google.gms.google-services")
 }
 
 
@@ -72,6 +73,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.10.0"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-perf")
+    implementation ("com.google.firebase:firebase-analytics:17.4.1")
 
 
     implementation(libs.androidx.core.ktx)
