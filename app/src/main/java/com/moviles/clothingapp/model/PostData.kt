@@ -1,6 +1,10 @@
 package com.moviles.clothingapp.model
 
 import com.squareup.moshi.Json
+import java.io.InputStream
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
+import java.io.OutputStream
 
 
 /* Decorators help moshi assign values of the JSON: */
@@ -17,5 +21,26 @@ data class PostData(
 
 )
 
+interface PostDataDAO {
+    fun save(p: PostData, outStream: OutputStream)
 
+    fun read(inStream: InputStream) : PostData
+}
 
+class SerializedPostDataDAO : PostDataDAO {
+
+    override fun save(p: PostData, outStream: OutputStream) {
+        val o = ObjectOutputStream(outStream)
+        outStream.use {
+            o.writeObject(p)
+        }
+    }
+
+    override fun read(inStream: InputStream): PostData {
+        val i = ObjectInputStream(inStream)
+        inStream.use {
+            return i.readObject() as PostData
+        }
+    }
+
+}
