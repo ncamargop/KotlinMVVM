@@ -17,6 +17,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.google.firebase.perf.FirebasePerformance
+import com.google.firebase.perf.metrics.Trace
 import com.moviles.clothingapp.viewmodel.ResetPasswordViewModel
 
 @Composable
@@ -24,9 +26,11 @@ fun ResetPasswordScreen(resetPasswordViewModel: ResetPasswordViewModel = viewMod
     var email by remember { mutableStateOf("") }
     val context = LocalContext.current
     val resetPasswordResult by resetPasswordViewModel.resetPasswordResult.observeAsState()
+    val trace: Trace = remember { FirebasePerformance.getInstance().newTrace("ResetPassword_Loading") }
 
     // Efecto popup de link enviado
     LaunchedEffect(resetPasswordResult) {
+        trace.start()
         when (resetPasswordResult) {
             is ResetPasswordViewModel.ResetPasswordResult.Success -> {
                 Toast.makeText(context, "Correo de recuperacion enviado.", Toast.LENGTH_SHORT).show()
@@ -38,6 +42,7 @@ fun ResetPasswordScreen(resetPasswordViewModel: ResetPasswordViewModel = viewMod
                 // ...
             }
         }
+        trace.stop()
     }
 
     Column(

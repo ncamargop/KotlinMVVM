@@ -11,6 +11,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.firebase.perf.FirebasePerformance
+import com.google.firebase.perf.metrics.Trace
 import com.moviles.clothingapp.ui.theme.DarkGreen
 import com.moviles.clothingapp.viewmodel.LoginViewModel
 import kotlinx.coroutines.delay
@@ -20,9 +22,15 @@ fun CreateAccountScreen(loginViewModel: LoginViewModel, navController: NavContro
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+    val trace: Trace = remember { FirebasePerformance.getInstance().newTrace("CreateAccountScreen_Loading") }
 
     // Observar si ocurre un error
     val signUpErrorMessage by loginViewModel.signUpErrorMessage.collectAsState()
+
+    LaunchedEffect(Unit) {
+        trace.start()
+        trace.stop()
+    }
 
     Column(
         modifier = Modifier

@@ -14,6 +14,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.firebase.perf.FirebasePerformance
+import com.google.firebase.perf.metrics.Trace
 import com.moviles.clothingapp.ui.theme.DarkGreen
 import com.moviles.clothingapp.viewmodel.PostViewModel
 
@@ -25,12 +27,22 @@ import com.moviles.clothingapp.viewmodel.PostViewModel
 */
 @Composable
 fun WeatherCategoryScreen(categoryId: String, navController: NavController, viewModel: PostViewModel) {
+    val trace: Trace = FirebasePerformance.getInstance().newTrace("WeatherClothesScreen_trace")
+    trace.start()
     /* Launch the query for category of weather */
     LaunchedEffect(categoryId) {
         viewModel.fetchPostsByCategory(categoryId)
     }
 
     val posts by viewModel.posts.collectAsState()
+
+    LaunchedEffect(posts) {
+        if (posts.isNotEmpty()) {
+            trace.stop()
+        }
+    }
+
+
 
     Column(modifier = Modifier.fillMaxSize()) {
         Row(

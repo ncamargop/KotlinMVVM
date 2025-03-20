@@ -59,9 +59,6 @@ class LoginViewModel(private val auth: FirebaseAuth) : ViewModel() {
         }
     }
 
-    fun signOut() {
-        auth.signOut()
-    }
 
     fun signUp(email: String, password: String) {
         viewModelScope.launch {

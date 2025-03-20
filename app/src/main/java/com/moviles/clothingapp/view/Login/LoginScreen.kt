@@ -11,6 +11,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.google.firebase.perf.FirebasePerformance
+import com.google.firebase.perf.metrics.Trace
 import com.moviles.clothingapp.viewmodel.LoginViewModel
 import com.moviles.clothingapp.viewmodel.WeatherViewModel
 import kotlinx.coroutines.delay
@@ -24,9 +26,12 @@ fun LoginScreen(loginViewModel: LoginViewModel, onNavigateToHome: () -> Unit,
     /* Observe if any errors occur in login */
     val signInErrorMessage by loginViewModel.signInErrorMessage.collectAsState()
 
-    /* Launch process for dynamic PromoBanner - based on weather */
+    /* Launch process for dynamic PromoBanner - based on weather & measures loading time*/
+    val trace: Trace = remember { FirebasePerformance.getInstance().newTrace("LoginScreen_Loading") }
     LaunchedEffect(Unit){
+        trace.start()
         weatherViewModel.fetchWeatherData()
+        trace.stop()
     }
 
     Column(

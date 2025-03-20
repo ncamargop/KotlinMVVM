@@ -16,8 +16,12 @@ import com.moviles.clothingapp.viewmodel.LoginViewModel
 import com.moviles.clothingapp.viewmodel.ResetPasswordViewModel
 import com.moviles.clothingapp.viewmodel.WeatherViewModel
 import android.Manifest
+import android.os.Build
+import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
-
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.analytics
+import com.google.firebase.perf.FirebasePerformance
 
 
 class MainActivity : ComponentActivity() {
@@ -25,6 +29,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var resetPasswordViewModel: ResetPasswordViewModel
     private lateinit var weatherViewModel: WeatherViewModel
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     // Inside your MainActivity class
     private var locationPermissionGranted = false
@@ -42,6 +47,17 @@ class MainActivity : ComponentActivity() {
         auth = Firebase.auth
         loginViewModel = LoginViewModel(auth)
         resetPasswordViewModel = ResetPasswordViewModel(auth)
+        Log.d("FirebasePerf", "Firebase Performance Monitoring initialized: ${FirebasePerformance.getInstance()}")
+        firebaseAnalytics = Firebase.analytics
+
+        val deviceInfo = Bundle().apply {
+            putString("device_model", Build.MODEL)
+            putString("device_brand", Build.BRAND)
+            putString("os_version", Build.VERSION.RELEASE)
+        }
+
+        firebaseAnalytics.logEvent("device_info", deviceInfo)
+        Log.d("DEVICES", ""+deviceInfo)
 
         // Request location permissions
         requestLocationPermissions()
