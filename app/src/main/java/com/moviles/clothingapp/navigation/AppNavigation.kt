@@ -8,6 +8,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.moviles.clothingapp.view.DetailedPost.DetailedPostScreen
 import com.moviles.clothingapp.view.Discover.DiscoverScreen
 import com.moviles.clothingapp.view.Discover.WeatherCategoryScreen
 import com.moviles.clothingapp.view.HomeView.MainScreen
@@ -84,6 +85,21 @@ fun AppNavigation(navController: NavHostController,
             val postViewModel: PostViewModel = viewModel()
             DiscoverScreen(navController, postViewModel, query)
         }
+
+        composable(
+            route = "detailedPost/{postId}",
+            arguments = listOf(navArgument("postId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val postId = backStackEntry.arguments?.getInt("postId") ?: 0
+            val postViewModel: PostViewModel = viewModel()
+            DetailedPostScreen(
+                productId = postId,
+                viewModel = postViewModel,
+                onBack = { navController.popBackStack() },
+                onAddToCart = { /* lógica para agregar al carrito */ }
+            )
+        }
+
 
 
 

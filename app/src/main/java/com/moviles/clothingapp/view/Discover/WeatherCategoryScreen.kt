@@ -76,7 +76,9 @@ fun WeatherCategoryScreen(categoryId: String, navController: NavController, view
                 modifier = Modifier.padding(8.dp)
             ) {
                 items(posts) { post ->
-                    PostItem(post)
+                    PostItem(post) {
+                        navController.navigate("detailedPost/${post.id}")
+                    }
                 }
             }
         }

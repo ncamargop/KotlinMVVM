@@ -58,15 +58,13 @@ fun DiscoverScreen(navController: NavController, viewModel: PostViewModel, query
     var minPrice by remember { mutableStateOf("") }
     var maxPrice by remember { mutableStateOf("") }
 
-
     LaunchedEffect(posts) {
         if (posts.isNotEmpty()) {
             trace.stop()
         }
     }
 
-
-    Scaffold( /* This needs to be here to have the bottom navigation bar. */
+    Scaffold(
         topBar = {
             Row(
                 modifier = Modifier
@@ -94,18 +92,14 @@ fun DiscoverScreen(navController: NavController, viewModel: PostViewModel, query
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            /* Search bar invocation */
             SearchBar(
                 searchText = searchQuery,
                 onSearchTextChange = { searchQuery = it },
                 onSearchSubmit = {
                     navController.navigate("discover/${searchQuery}")
                 }
-
             )
 
-
-            /* Filters to watch and display posts. */
             val filteredPosts = posts.filter { post ->
                 val postPrice = post.price.replace(".", "").replace(",", "").toIntOrNull() ?: 0
                 (selectedCategory == "Todos" || post.category == selectedCategory) &&
@@ -117,7 +111,6 @@ fun DiscoverScreen(navController: NavController, viewModel: PostViewModel, query
                         (maxPrice.toIntOrNull()?.let { postPrice <= it } ?: true)
             }
 
-            /* Grid to show posts */
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 modifier = Modifier
@@ -125,14 +118,14 @@ fun DiscoverScreen(navController: NavController, viewModel: PostViewModel, query
                     .padding(8.dp)
             ) {
                 items(filteredPosts) { post ->
-                    PostItem(post)
+                    PostItem(post) {
+                        navController.navigate("detailedPost/${post.id}")
+                    }
                 }
             }
         }
     }
 
-
-    /* Invoke the filter dialog composable. */
     if (showFilterDialog) {
         FilterDialog(
             onDismiss = { showFilterDialog = false },
@@ -148,5 +141,5 @@ fun DiscoverScreen(navController: NavController, viewModel: PostViewModel, query
             onMaxPriceChange = { maxPrice = it }
         )
     }
-
 }
+

@@ -1,5 +1,6 @@
 package com.moviles.clothingapp.view.Discover
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -20,11 +21,12 @@ import com.moviles.clothingapp.ui.theme.figtreeFamily
 *   - Uses the same format as the featured products section for each post.
  */
 @Composable
-fun PostItem(post: PostData) {
+fun PostItem(post: PostData, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .padding(8.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable { onClick() }, // Agregamos el evento de clic aquí
         elevation = CardDefaults.cardElevation(8.dp),
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)

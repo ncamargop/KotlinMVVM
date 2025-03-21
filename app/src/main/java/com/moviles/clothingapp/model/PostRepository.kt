@@ -66,6 +66,25 @@ class PostRepository {
         }
     }
 
+    suspend fun fetchPostById(id: Int): PostData? {
+        return safeApiCall { apiService.fetchClothesById(id) }
+    }
+    private suspend fun <T> safeApiCall(apiCall: suspend () -> Response<T>): T? {
+        return try {
+            val response = apiCall()
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                Log.e("PostRepository", "Error ${response.code()}: ${response.errorBody()?.string()}")
+                null
+            }
+        } catch (e: Exception) {
+            Log.e("PostRepository", "Network error: ${e.message}")
+            null
+        }
+    }
+
+
 
 
     /* Retrieves information using FAST API, testing with this return format:
@@ -84,7 +103,8 @@ class PostRepository {
 
         @GET("clothing/category/{categoryId}") // Fetch by category
         suspend fun fetchClothesByCategory(@retrofit2.http.Path("categoryId") categoryId: String): Response<List<PostData>>
+
+        @GET("clothing/{id}")
+        suspend fun fetchClothesById(@retrofit2.http.Path("id") id: Int): Response<PostData>
     }
-
-
 }
