@@ -1,7 +1,6 @@
 package com.moviles.clothingapp.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -14,6 +13,7 @@ import com.moviles.clothingapp.view.HomeView.MainScreen
 import com.moviles.clothingapp.view.Login.CreateAccountScreen
 import com.moviles.clothingapp.view.Login.LoginScreen
 import com.moviles.clothingapp.view.Login.ResetPasswordScreen
+import com.moviles.clothingapp.view.Map.MapScreen
 import com.moviles.clothingapp.viewmodel.HomeViewModel
 import com.moviles.clothingapp.viewmodel.LoginViewModel
 import com.moviles.clothingapp.viewmodel.PostViewModel
@@ -83,6 +83,12 @@ fun AppNavigation(navController: NavHostController,
             val query = backStackEntry.arguments?.getString("query") ?: ""
             val postViewModel: PostViewModel = viewModel()
             DiscoverScreen(navController, postViewModel, query)
+        }
+
+
+
+        composable("map/") {
+            MapScreen(navController)
         }
 
 

@@ -84,6 +84,10 @@ dependencies {
     implementation ("androidx.compose.ui:ui:1.5.0")
     implementation ("androidx.camera:camera-camera2:1.3.0")
 
+    // Maps
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("com.google.maps.android:maps-compose:2.11.4")
+
 
 
     implementation(libs.androidx.core.ktx)
