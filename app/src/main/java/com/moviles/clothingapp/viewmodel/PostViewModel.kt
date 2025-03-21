@@ -11,9 +11,15 @@ import kotlinx.coroutines.launch
 
 class PostViewModel : ViewModel() {
     private val repository = PostRepository()
+
     private val _posts = MutableStateFlow(emptyList<PostData>())
     val posts: StateFlow<List<PostData>> get() = _posts
 
+    private val _post = MutableStateFlow<PostData?>(null)
+    val post: StateFlow<PostData?> get() = _post
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> get() = _isLoading
 
     init {
         fetchPostsFiltered()
@@ -36,6 +42,22 @@ class PostViewModel : ViewModel() {
             } catch (e: Exception) {
                 Log.e("PostViewModel", "Error fetching category $categoryId: ${e.message}")
                 _posts.value = emptyList()
+            }
+        }
+    }
+
+    /* Fetch post by ID */
+    fun fetchPostById(id: Int) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val result = repository.fetchPostById(id)
+                _post.value = result
+            } catch (e: Exception) {
+                Log.e("PostViewModel", "Error fetching post by ID $id: ${e.message}")
+                _post.value = null
+            } finally {
+                _isLoading.value = false
             }
         }
     }

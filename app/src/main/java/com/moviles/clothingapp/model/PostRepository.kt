@@ -80,9 +80,30 @@ class PostRepository {
             }
         } catch (e: Exception) {
             Log.e("PostRepository", "Exception: ${e.message}")
+            
+            
+            
+    suspend fun fetchPostById(id: Int): PostData? {
+        return safeApiCall { apiService.fetchClothesById(id) }
+    }
+    
+    
+    private suspend fun <T> safeApiCall(apiCall: suspend () -> Response<T>): T? {
+        return try {
+            val response = apiCall()
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                Log.e("PostRepository", "Error ${response.code()}: ${response.errorBody()?.string()}")
+                null
+            }
+        } catch (e: Exception) {
+            Log.e("PostRepository", "Network error: ${e.message}")
             null
         }
     }
+
+
 
 
 
@@ -102,10 +123,13 @@ class PostRepository {
         @GET("clothing/category/{categoryId}") // Fetch by category
         suspend fun fetchClothesByCategory(@retrofit2.http.Path("categoryId") categoryId: String): Response<List<PostData>>
 
+
         @POST("create-post") // POST a new piece of clothing
         suspend fun createPost(@Body newPost: PostData): Response<PostData>
 
+
+
+        @GET("clothing/{id}")
+        suspend fun fetchClothesById(@retrofit2.http.Path("id") id: Int): Response<PostData>
     }
-
-
 }
