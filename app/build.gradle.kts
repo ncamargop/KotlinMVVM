@@ -76,6 +76,15 @@ dependencies {
     implementation ("com.google.firebase:firebase-analytics:17.4.1")
 
 
+    // Camera dependencies
+    implementation ("androidx.camera:camera-core:1.3.0")
+    implementation ("androidx.camera:camera-lifecycle:1.3.0")
+    implementation ("androidx.camera:camera-view:1.3.0")
+    implementation ("androidx.compose.ui:ui:1.5.0")
+    implementation ("androidx.camera:camera-camera2:1.3.0")
+
+
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

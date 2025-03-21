@@ -39,7 +39,7 @@ fun BottomNavigationBar(navController: NavController) {
             BottomNavItem("home", Icons.Rounded.Home, "Home"), // Implemented: YES
             BottomNavItem("discover/", Icons.Rounded.Explore, "Discover"), // Implemented: YES
             BottomNavItem("cart", Icons.Rounded.ShoppingCart, "Cart"), // Implemented: NO
-            BottomNavItem("camera", Icons.Rounded.CameraAlt, "Camera"), // Implemented: NO
+            BottomNavItem("camera", Icons.Rounded.CameraAlt, "Camera"), // Implemented: YES
             BottomNavItem("profile", Icons.Rounded.PersonOutline, "Profile") // Implemented: NO
         )
 

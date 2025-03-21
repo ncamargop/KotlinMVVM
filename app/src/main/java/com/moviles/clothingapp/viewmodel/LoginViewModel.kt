@@ -32,6 +32,18 @@ class LoginViewModel(private val auth: FirebaseAuth) : ViewModel() {
     val signInErrorMessage: StateFlow<String?> = _signInErrorMessage
 
 
+    init {
+        checkUserLoggedIn()
+    }
+
+
+    private fun checkUserLoggedIn() {
+        val user = auth.currentUser
+        if (user != null) {
+            _navigateToHome.value = true // Navigate to home if already logged in
+        }
+    }
+
     fun signIn(email: String, password: String) {
         viewModelScope.launch {
             try {

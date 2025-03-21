@@ -9,7 +9,7 @@ import java.io.OutputStream
 
 /* Decorators help moshi assign values of the JSON: */
 data class PostData(
-    @Json(name="id") val id: String, //PK
+    @Json(name="id") val id: String?=null, // Autoasigned in postgreSQL
     @Json(name="name") val name: String,
     @Json(name="price") val price: String,
     @Json(name="brand") val brand: String,
@@ -27,6 +27,8 @@ interface PostDataDAO {
     fun read(inStream: InputStream) : PostData
 }
 
+
+// TODO: Document this and how its used
 class SerializedPostDataDAO : PostDataDAO {
 
     override fun save(p: PostData, outStream: OutputStream) {
