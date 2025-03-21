@@ -5,6 +5,7 @@ plugins {
     //(libs.plugins.googleService)
     id("com.google.firebase.firebase-perf")
     id("com.google.gms.google-services")
+    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
 }
 
 
@@ -83,6 +84,10 @@ dependencies {
     implementation ("androidx.compose.ui:ui:1.5.0")
     implementation ("androidx.camera:camera-camera2:1.3.0")
 
+    // Maps
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("com.google.maps.android:maps-compose:2.11.4")
+
 
 
     implementation(libs.androidx.core.ktx)
@@ -98,6 +103,9 @@ dependencies {
     implementation(libs.firebase.auth.ktx)
     implementation(libs.play.services.location)
     implementation(libs.play.services.measurement.api)
+    implementation(libs.play.services.maps)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
