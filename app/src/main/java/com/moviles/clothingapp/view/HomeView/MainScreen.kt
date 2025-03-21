@@ -4,6 +4,7 @@ package com.moviles.clothingapp.view.HomeView
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,31 +42,38 @@ fun MainScreen(
     Scaffold(
         bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
-        Column(modifier = Modifier.padding(paddingValues).padding(vertical = 1.dp),
-            verticalArrangement = Arrangement.Center,  // Center vertically
-            horizontalAlignment = Alignment.CenterHorizontally) {
+        LazyColumn(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            item {
+                Image(
+                    painter = painterResource(id = R.drawable.logo),
+                    contentDescription = "App Logo",
+                    modifier = Modifier.size(80.dp)
+                )
+            }
 
-            Image(
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = "App Logo",
-                modifier = Modifier
-                    .size(100.dp)
-            )
+            item {
+                SearchBar(
+                    searchText = searchText.value,
+                    onSearchTextChange = { newText -> searchText.value = newText },
+                    onSearchSubmit = {
+                        navController.navigate("discover/${searchText.value}")
+                    }
+                )
+            }
 
-            SearchBar(
-                searchText = searchText.value,
-                onSearchTextChange = { newText -> searchText.value = newText },
-                onSearchSubmit = {
-                    navController.navigate("discover/${searchText.value}")
-                })
-            QuickActions()
-            PromoBanner(bannerType = banner.value, navController = navController)
-            CategorySection(categoryList = categoryList)
-            FeaturedProducts(homeViewModel)
-
+            item { QuickActions() }
+            item { PromoBanner(bannerType = banner.value, navController = navController) }
+            item { CategorySection(categoryList = categoryList) }
+            item { FeaturedProducts(homeViewModel) }
         }
-
     }
+
 
     // Stop trace metric (ms) when banner has been loaded
     LaunchedEffect(banner.value) {

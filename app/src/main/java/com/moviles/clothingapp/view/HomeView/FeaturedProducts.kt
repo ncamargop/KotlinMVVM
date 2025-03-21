@@ -28,7 +28,6 @@ import coil.compose.rememberAsyncImagePainter
 /* SECCION DESTACADOS */
 @Composable
 fun FeaturedProducts(viewModel: HomeViewModel) {
-
     val products by viewModel.postData.observeAsState(emptyList())
 
     Column(modifier = Modifier.padding(16.dp)) {
@@ -46,16 +45,23 @@ fun FeaturedProducts(viewModel: HomeViewModel) {
             )
         }
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            modifier = Modifier.fillMaxWidth()
+        // Wrap in a Box with height to avoid infinite scrolling error
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .height(400.dp) // Set finite height
         ) {
-            items(products) { product ->
-                ProductCard(product)
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(products) { product ->
+                    ProductCard(product)
+                }
             }
         }
     }
 }
+
 
 
 
