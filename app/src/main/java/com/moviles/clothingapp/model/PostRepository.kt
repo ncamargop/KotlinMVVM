@@ -79,9 +79,10 @@ class PostRepository {
                 null
             }
         } catch (e: Exception) {
-            Log.e("PostRepository", "Exception: ${e.message}")
-            
-            
+            Log.e("PostRepository", "Exception: ${e}")
+            null
+        }
+    }
             
     suspend fun fetchPostById(id: Int): PostData? {
         return safeApiCall { apiService.fetchClothesById(id) }
