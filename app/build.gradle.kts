@@ -5,6 +5,7 @@ plugins {
     //(libs.plugins.googleService)
     id("com.google.firebase.firebase-perf")
     id("com.google.gms.google-services")
+    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
 }
 
 
@@ -89,6 +90,9 @@ dependencies {
     implementation(libs.firebase.auth.ktx)
     implementation(libs.play.services.location)
     implementation(libs.play.services.measurement.api)
+    implementation(libs.play.services.maps)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

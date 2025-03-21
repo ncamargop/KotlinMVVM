@@ -8,14 +8,18 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapFragment
 import com.moviles.clothingapp.view.Discover.DiscoverScreen
 import com.moviles.clothingapp.view.Discover.WeatherCategoryScreen
 import com.moviles.clothingapp.view.HomeView.MainScreen
 import com.moviles.clothingapp.view.Login.CreateAccountScreen
 import com.moviles.clothingapp.view.Login.LoginScreen
 import com.moviles.clothingapp.view.Login.ResetPasswordScreen
+import com.moviles.clothingapp.view.Map.MapScreen
 import com.moviles.clothingapp.viewmodel.HomeViewModel
 import com.moviles.clothingapp.viewmodel.LoginViewModel
+import com.moviles.clothingapp.viewmodel.MapLogicViewModel
 import com.moviles.clothingapp.viewmodel.PostViewModel
 import com.moviles.clothingapp.viewmodel.ResetPasswordViewModel
 import com.moviles.clothingapp.viewmodel.WeatherViewModel
@@ -77,7 +81,6 @@ fun AppNavigation(navController: NavHostController,
             WeatherCategoryScreen(categoryId = categoryId, navController, viewModel = postViewModel)
         }
 
-
         /* Discover page to show all posts. Route: discover/   */
         composable("discover/{query}") { backStackEntry ->
             val query = backStackEntry.arguments?.getString("query") ?: ""
@@ -85,7 +88,9 @@ fun AppNavigation(navController: NavHostController,
             DiscoverScreen(navController, postViewModel, query)
         }
 
-
+        composable("map/") {
+            MapScreen(navController, mapLogicViewModel = MapLogicViewModel())
+        }
 
     }
 }

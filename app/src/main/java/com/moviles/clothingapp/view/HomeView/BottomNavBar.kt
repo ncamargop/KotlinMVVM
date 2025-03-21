@@ -6,6 +6,7 @@ import androidx.compose.material.icons.rounded.CameraAlt
 import androidx.compose.material.icons.rounded.ChatBubbleOutline
 import androidx.compose.material.icons.rounded.Explore
 import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.Map
 import androidx.compose.material.icons.rounded.PersonOutline
 import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.material3.Icon
@@ -40,7 +41,8 @@ fun BottomNavigationBar(navController: NavController) {
             BottomNavItem("discover/", Icons.Rounded.Explore, "Discover"), // Implemented: YES
             BottomNavItem("cart", Icons.Rounded.ShoppingCart, "Cart"), // Implemented: NO
             BottomNavItem("camera", Icons.Rounded.CameraAlt, "Camera"), // Implemented: NO
-            BottomNavItem("profile", Icons.Rounded.PersonOutline, "Profile") // Implemented: NO
+            BottomNavItem("profile", Icons.Rounded.PersonOutline, "Profile"), // Implemented: NO
+            BottomNavItem("map/", Icons.Rounded.Map, "Map") // Implemented: NO
         )
 
         val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
