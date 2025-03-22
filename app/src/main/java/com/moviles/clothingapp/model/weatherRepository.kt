@@ -21,6 +21,7 @@ import retrofit2.http.Query
 
 /* Weather Repo: Manages the external API endpoint connection, request and parsing of response
 *  for a user location. Also checks if the user's location is enabled.
+*  Uses the same process featured for connecting to backend API.
  */
 class WeatherRepository(private val context: Context) {
     private val BASE_URL = "https://api.openweathermap.org/data/2.5/" //API for weather

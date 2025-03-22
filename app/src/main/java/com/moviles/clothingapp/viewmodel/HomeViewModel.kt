@@ -7,31 +7,38 @@ import kotlinx.coroutines.launch
 
 
 
-/*  HomeViewModel fetches the information from the post repository (the one that connects with the API),
-*   to send the information of the products to the Categories and FeaturedProducts views.
-*
+/*  HomeViewModel:
+*   - Fetches the information from the post repository (the one that connects with the API),
+*     to send the information of the products to the Categories and FeaturedProducts views.
 */
 class HomeViewModel : ViewModel() {
     data class ProductUI(
         val image: String,
         val name: String,
         val brand: String,
-        val price: String
+        val price: String,
+        val color: String,
+        val size: String,
+        val group: String // Genero: hombre o mujer.
     )
 
     private val postRepository = PostRepository()
-    private val _postData = MutableLiveData<List<PostData>>()
 
-    val postData: LiveData<List<ProductUI>> = _postData.switchMap { posts ->
-        liveData {
-            emit(posts.map { product ->
-                ProductUI(
-                    image = product.image,
-                    name = product.name,
-                    brand = product.brand,
-                    price = "$${product.price}"
-                )
-            })
+
+    private val _postData = MutableLiveData<List<PostData>>()
+    val postData: LiveData<List<ProductUI>> = _postData.map { posts ->
+        posts.map { product ->
+            ProductUI(
+                image = product.image,
+                name = product.name,
+                brand = product.brand,
+                price = "$${product.price}",
+                color = product.color,
+                size = product.size,
+                group = product.group
+
+
+            )
         }
     }
 

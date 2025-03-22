@@ -76,6 +76,7 @@ git push origin feature/nombre-feature
 5. Create the Pull Request in github to merge changes into develop or wait for approval and review of the merge by one of the peers.
 
 
+
 # Additional information
 ## Authentication with Firebase auth
 ![image](https://github.com/user-attachments/assets/2957b2e1-1283-498c-a762-e0fb64957d76)
@@ -95,8 +96,6 @@ git push origin feature/nombre-feature
     <img src="https://github.com/user-attachments/assets/1a87259d-9adf-47a9-b3e6-a3c5d3b4d0b9" width="45%">
     <img src="https://github.com/user-attachments/assets/fd35e1fc-a042-4bec-aa90-846ea70b15ee" width="45%">
 </p>
-
-
 
 
 

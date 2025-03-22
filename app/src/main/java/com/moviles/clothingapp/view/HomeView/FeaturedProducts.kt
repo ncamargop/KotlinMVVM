@@ -17,9 +17,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.moviles.clothingapp.ui.theme.figtreeFamily
 import com.moviles.clothingapp.viewmodel.HomeViewModel
 import coil.compose.rememberAsyncImagePainter
@@ -28,7 +30,6 @@ import coil.compose.rememberAsyncImagePainter
 /* SECCION DESTACADOS */
 @Composable
 fun FeaturedProducts(viewModel: HomeViewModel) {
-
     val products by viewModel.postData.observeAsState(emptyList())
 
     Column(modifier = Modifier.padding(16.dp)) {
@@ -46,12 +47,18 @@ fun FeaturedProducts(viewModel: HomeViewModel) {
             )
         }
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            modifier = Modifier.fillMaxWidth()
+        // Wrap in a Box with height to avoid infinite scrolling error
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .height(400.dp) // Set finite height
         ) {
-            items(products) { product ->
-                ProductCard(product)
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(products) { product ->
+                    ProductCard(product)
+                }
             }
         }
     }
@@ -59,8 +66,17 @@ fun FeaturedProducts(viewModel: HomeViewModel) {
 
 
 
+
 @Composable
 fun ProductCard(product: HomeViewModel.ProductUI){
+    val bucketId = "67ddf3860035ee6bd725"
+    val projectId = "moviles"
+    val imageUrl = if (product.image.startsWith("http")) {
+        product.image // Fallback if it's already a URL or local resource
+    } else {
+        "https://cloud.appwrite.io/v1/storage/buckets/$bucketId/files/${product.image}/view?project=$projectId"
+    }
+
     Card(
         modifier = Modifier
             .padding(8.dp)
@@ -70,8 +86,8 @@ fun ProductCard(product: HomeViewModel.ProductUI){
         shape = RoundedCornerShape(12.dp)
     ) {
         Column {
-            Image(
-                painter = rememberAsyncImagePainter(product.image),
+            AsyncImage(
+            model = imageUrl,
                 contentDescription = product.name,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

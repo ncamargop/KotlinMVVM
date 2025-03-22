@@ -24,7 +24,7 @@ class WeatherViewModel(context: Context) : ViewModel() {
         LIGHT_CLOTHING,
         WARM_CLOTHING,
         RAINY_WEATHER,
-        COMFORTABLE_WEATHER,
+        CLOUDY_WEATHER,
         NO_WEATHER_DATA
     }
 
@@ -44,7 +44,7 @@ class WeatherViewModel(context: Context) : ViewModel() {
                 temperature > 20 -> BannerType.LIGHT_CLOTHING
                 temperature < 10 -> BannerType.WARM_CLOTHING
                 description.contains("rain", ignoreCase = true) -> BannerType.RAINY_WEATHER
-                else -> BannerType.COMFORTABLE_WEATHER
+                else -> BannerType.CLOUDY_WEATHER
             }
             Log.d("WeatherViewModel", "Banner value: $banner")
             bannerType.setValue(banner)

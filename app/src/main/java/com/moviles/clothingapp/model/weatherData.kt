@@ -1,6 +1,9 @@
 package com.moviles.clothingapp.model
 
-
+import java.io.InputStream
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
+import java.io.OutputStream
 
 
 data class WeatherResponse(
@@ -55,3 +58,27 @@ data class Sys(
     val sunrise: Long,
     val sunset: Long
 )
+
+interface WeatherDAO {
+    fun save(p: Object, outStream: OutputStream)
+
+    fun read(inStream: InputStream) : Object
+}
+
+class SerializedWeatherDAO : WeatherDAO {
+
+    override fun save(p: Object, outStream: OutputStream) {
+        val o = ObjectOutputStream(outStream)
+        outStream.use {
+            o.writeObject(p)
+        }
+    }
+
+    override fun read(inStream: InputStream): Object {
+        val i = ObjectInputStream(inStream)
+        inStream.use {
+            return i.readObject() as Object
+        }
+    }
+
+}

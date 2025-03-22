@@ -10,14 +10,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
-import com.moviles.clothingapp.model.PostData
-import com.moviles.clothingapp.ui.theme.figtreeFamily
+import com.google.firebase.perf.FirebasePerformance
+import com.google.firebase.perf.metrics.Trace
+import com.moviles.clothingapp.ui.theme.DarkGreen
 import com.moviles.clothingapp.viewmodel.PostViewModel
 
 
@@ -28,12 +27,22 @@ import com.moviles.clothingapp.viewmodel.PostViewModel
 */
 @Composable
 fun WeatherCategoryScreen(categoryId: String, navController: NavController, viewModel: PostViewModel) {
-    // Fetch data on first composition
+    val trace: Trace = FirebasePerformance.getInstance().newTrace("WeatherClothesScreen_trace")
+    trace.start()
+    /* Launch the query for category of weather */
     LaunchedEffect(categoryId) {
         viewModel.fetchPostsByCategory(categoryId)
     }
 
     val posts by viewModel.posts.collectAsState()
+
+    LaunchedEffect(posts) {
+        if (posts.isNotEmpty()) {
+            trace.stop()
+        }
+    }
+
+
 
     Column(modifier = Modifier.fillMaxSize()) {
         Row(
@@ -53,58 +62,39 @@ fun WeatherCategoryScreen(categoryId: String, navController: NavController, view
             )
         }
 
-        // Display loading or posts
+        /* Display loading or posts */
         if (posts.isEmpty()) {
-            CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+            Box( // to center it
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = DarkGreen)
+            }
         } else {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 modifier = Modifier.padding(8.dp)
             ) {
                 items(posts) { post ->
-                    PostItem(post)
+                    PostItem(post) {
+                        navController.navigate("detailedPost/${post.id}")
+                    }
                 }
             }
         }
     }
 }
 
-@Composable
-fun PostItem(post: PostData) {
-    Card(
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(8.dp),
-        shape = MaterialTheme.shapes.medium,
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        )
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            AsyncImage(
-                model = post.image,
-                contentDescription = post.name,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = post.brand, fontFamily = figtreeFamily ,fontWeight = FontWeight.Normal, fontSize = 14.sp)
-            Text(text = post.name, fontFamily = figtreeFamily ,fontWeight = FontWeight.Medium, fontSize = 18.sp)
-            Text(text = "$${post.price}", fontFamily = figtreeFamily, fontSize = 16.sp, fontWeight = FontWeight.Medium, modifier = Modifier.padding(top = 4.dp))
-        }
-    }
-}
 
-// Helper function to get readable category titles
+
+/* Auxiliary function to get readable category titles */
 fun getCategoryTitle(categoryId: String): String {
     return when (categoryId) {
-        "summer" -> "Ropa Ligera para el Calor"
-        "winter" -> "Ropa Abrigada"
-        "rain" -> "Especial para Días Lluviosos"
-        "casual" -> "Ropa Casual"
-        "sale" -> "Mejores Precios"
+        "Calor" -> "Ropa ligera para el calor"
+        "Frio" -> "Ropa abrigada"
+        "Lluvia" -> "Especial para Días lluviosos"
+        "Nublado" -> "Para días nublados "
+        "Oferta" -> "Mejores precios"
         else -> "Productos"
     }
 }
