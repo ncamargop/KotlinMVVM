@@ -22,6 +22,14 @@ import com.moviles.clothingapp.ui.theme.figtreeFamily
  */
 @Composable
 fun PostItem(post: PostData, onClick: () -> Unit) {
+    val bucketId = "67ddf3860035ee6bd725"
+    val projectId = "moviles"
+    val imageUrl = if (post.image.startsWith("http")) { // If seeder image is in URL if not in bucket
+        post.image
+    } else {
+        "https://cloud.appwrite.io/v1/storage/buckets/$bucketId/files/${post.image}/view?project=$projectId"
+    }
+
     Card(
         modifier = Modifier
             .padding(8.dp)
@@ -33,7 +41,7 @@ fun PostItem(post: PostData, onClick: () -> Unit) {
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             AsyncImage(
-                model = post.image,
+                model = imageUrl,
                 contentDescription = post.name,
                 modifier = Modifier
                     .fillMaxWidth()

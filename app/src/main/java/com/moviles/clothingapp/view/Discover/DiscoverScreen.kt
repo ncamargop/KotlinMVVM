@@ -58,6 +58,8 @@ fun DiscoverScreen(navController: NavController, viewModel: PostViewModel, query
     var minPrice by remember { mutableStateOf("") }
     var maxPrice by remember { mutableStateOf("") }
 
+
+
     LaunchedEffect(posts) {
         if (posts.isNotEmpty()) {
             trace.stop()

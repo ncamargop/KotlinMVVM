@@ -30,11 +30,8 @@ class MainActivity : ComponentActivity() {
     private lateinit var resetPasswordViewModel: ResetPasswordViewModel
     private lateinit var weatherViewModel: WeatherViewModel
     private lateinit var firebaseAnalytics: FirebaseAnalytics
-
-    // Inside your MainActivity class
     private var locationPermissionGranted = false
 
-    // Create permission launcher
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->

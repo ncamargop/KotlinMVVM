@@ -88,6 +88,9 @@ dependencies {
     implementation("com.google.android.gms:play-services-maps:18.2.0")
     implementation("com.google.maps.android:maps-compose:2.11.4")
 
+    // Image Storage
+    implementation("io.appwrite:sdk-for-android:6.1.0")
+
 
 
     implementation(libs.androidx.core.ktx)

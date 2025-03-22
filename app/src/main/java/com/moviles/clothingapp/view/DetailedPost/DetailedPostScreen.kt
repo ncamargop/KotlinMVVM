@@ -36,13 +36,22 @@ fun DetailedPostScreen(
             }
         }
         product != null -> {
+            val bucketId = "67ddf3860035ee6bd725"
+            val projectId = "moviles"
+            val imageUrl = if (product!!.image.startsWith("http")) {
+                product!!.image
+            } else {
+                "https://cloud.appwrite.io/v1/storage/buckets/$bucketId/files/${product!!.image}/view?project=$projectId"
+            }
+
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp)
             ) {
                 AsyncImage(
-                    model = product!!.image,
+                    model = imageUrl,
                     contentDescription = product!!.name,
                     modifier = Modifier
                         .fillMaxWidth()

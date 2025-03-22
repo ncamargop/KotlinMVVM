@@ -1,9 +1,13 @@
 package com.moviles.clothingapp.viewmodel
 
+import android.app.Application
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.State
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.moviles.clothingapp.model.ImageStoringRepository
 import com.moviles.clothingapp.model.PostData
 import com.moviles.clothingapp.repository.PostRepository
 import kotlinx.coroutines.launch
@@ -15,8 +19,9 @@ import kotlinx.coroutines.launch
 *   Gets the information inserted by the user in the CreatePostScreen and CameraScreen
 *   Sends the information gotten by UI to the repository to POST the information into backend and BD
 */
-class NewPostViewModel : ViewModel() {
+class NewPostViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = PostRepository()
+    private val appwriteRepository = ImageStoringRepository(application.applicationContext)
 
     /* Title field */
     private val _title = mutableStateOf("")
@@ -48,8 +53,8 @@ class NewPostViewModel : ViewModel() {
     val price: State<String> = _price
 
     /* Image taken by user */
-    private val _imageUri = mutableStateOf<String>("")
-    val imageUri: State<String> = _imageUri
+    private val _imageUri = mutableStateOf<String?>(null)
+    val imageUri: State<String?> = _imageUri
 
 
     /* Functions to update the state of fields */
@@ -60,13 +65,30 @@ class NewPostViewModel : ViewModel() {
     fun setGroup(group: String) { _selectedGroup.value = group }
     fun setColor(color: String) { _selectedColor.value = color }
     fun setPrice(newPrice: String) { _price.value = newPrice }
-    fun setImage(uri: String) { _imageUri.value = uri }
+    fun setImage(uri: String?) {
+        _imageUri.value = uri
+    }
 
 
     /* Submit Post function to send the data gotten by UI to the repository */
     fun submitPost(onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
             try {
+
+                val context = getApplication<Application>().applicationContext
+                val bucketId = "67ddf3860035ee6bd725"
+
+                // Upload Image First
+                val imageUri = _imageUri.value?.let { Uri.parse(it) }  // Convert String to Uri
+                val imageUrl = imageUri?.let { appwriteRepository.uploadImage(context, it, bucketId) }
+
+
+                if (imageUrl == null) {
+                    onResult(false)
+                    return@launch
+                }
+
+
                 val newPost = PostData(
                     name = title.value,
                     brand = brand.value,
@@ -74,7 +96,7 @@ class NewPostViewModel : ViewModel() {
                     category = selectedCategory.value,
                     group = selectedGroup.value,
                     price = price.value,
-                    image = imageUri.value,
+                    image = imageUrl,
                     color = selectedColor.value
                 )
 

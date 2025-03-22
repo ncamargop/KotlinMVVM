@@ -21,6 +21,9 @@ class PostViewModel : ViewModel() {
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> get() = _isLoading
 
+    private val _imageUrl = MutableStateFlow<String?>(null)
+    val imageUrl: StateFlow<String?> get() = _imageUrl
+
     init {
         fetchPostsFiltered()
     }
@@ -53,6 +56,8 @@ class PostViewModel : ViewModel() {
             try {
                 val result = repository.fetchPostById(id)
                 _post.value = result
+                result?.image?.let { fetchImageUrl(it) }
+
             } catch (e: Exception) {
                 Log.e("PostViewModel", "Error fetching post by ID $id: ${e.message}")
                 _post.value = null
@@ -60,6 +65,13 @@ class PostViewModel : ViewModel() {
                 _isLoading.value = false
             }
         }
+    }
+
+    fun fetchImageUrl(fileId: String) {
+        val projectId = "moviles"
+        val bucketId = "67ddf3860035ee6bd725"
+        val url = "https://cloud.appwrite.io/v1/storage/buckets/$bucketId/files/$fileId/view?project=$projectId"
+        _imageUrl.value = url
     }
 }
 

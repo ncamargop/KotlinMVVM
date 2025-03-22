@@ -39,10 +39,10 @@ fun BottomNavigationBar(navController: NavController) {
         val items = listOf(
             BottomNavItem("home", Icons.Rounded.Home, "Home"), // Implemented: YES
             BottomNavItem("discover/", Icons.Rounded.Explore, "Discover"), // Implemented: YES
-            BottomNavItem("cart", Icons.Rounded.ShoppingCart, "Cart"), // Implemented: NO
+            //BottomNavItem("cart", Icons.Rounded.ShoppingCart, "Cart"), // Implemented: NO
             BottomNavItem("camera", Icons.Rounded.CameraAlt, "Camera"), // Implemented: YES
             BottomNavItem("map/", Icons.Rounded.Map, "Map"), // Implemented: YES
-            BottomNavItem("profile", Icons.Rounded.PersonOutline, "Profile") // Implemented: NO
+            //BottomNavItem("profile", Icons.Rounded.PersonOutline, "Profile") // Implemented: NO
         )
 
         val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
