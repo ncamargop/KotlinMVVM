@@ -6,33 +6,32 @@ Link to the team's wiki: https://github.com/ISIS-3510-G42/Backend-App/wiki/Home-
 
 This project is a mobile application developed in Kotlin using Android Studio. The architecture used is MVVM (Model-View-ViewModel), and design patterns are implemented for this front-end component, such as DAO (Data Access Object) for interaction with data models managed from the backend; Repository for unified access to all information sources; Singleton for obtaining only one instance for each API and backend access; and finally, Observer, which operates on the frontend between the View and observes ViewModel state changes to apply them to the interface.
 
-# Estructura del proyecto
+# Project Structure
+In general the structure of the project follows a feature based directory structure, where its separated by the main features of the app, inside each package feature we have other packages as needed such as: data (for the Repository, BD connections and such), ui (for the composable screens of the feature) and the viewModel specific of the feature that acts as intermediary between the data and the ui.
 ```bash
 com.moviles.clothingapp/
 │
-├── model/ (for DAOs and Repository)
-│
+├── cart/
+│   ├── data/ (For DAOs, models and Repository)
+│   ├── ui/   (For the composable screens or UI components)
+│   ├── cartViewModel.kt 
+├── createPost/
+├── discover/
+├── home/
+├── login/
+├── map/
+├── post/
+├── weatherBanner/
+├── ui.utils/
+|    ├── Color.kt (for color palette)
+│    ├── Type.kt  (for text fonts)
+│    ├── SearchBar.kt
+│    ├── BottomNavBar.kt
+│    ├── QuickActions.kt
 ├── navigation/
 │   ├── AppNavigation.kt (to manage navigation between screens)
+├── mainActivity.kt
 │
-├── ui.theme/
-│   ├── Color.kt (for color palette)
-│   ├── Type.kt  (for text fonts)
-│
-├── view/ (Observers)
-│   ├── Discover/
-│   ├── HomeView/
-│   ├── Login/
-│
-├── viewmodel/ (Subject/Observable)
-│   ├── HomeViewModel.kt
-│   ├── LoginViewModel.kt
-│   ├── PostViewModel.kt
-│   ├── ResetPasswordViewModel.kt
-│   ├── WeatherViewModel.kt
-│
-├── MainActivity.kt (inits the app)
-|
 res/
 ├── drawable/ (stores static images)
 ├── font/ (stores installed fonts)
