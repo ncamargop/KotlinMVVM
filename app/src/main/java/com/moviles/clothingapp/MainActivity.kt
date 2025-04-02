@@ -4,26 +4,26 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.moviles.clothingapp.navigation.AppNavigation
-import com.moviles.clothingapp.viewmodel.LoginViewModel
-import com.moviles.clothingapp.viewmodel.ResetPasswordViewModel
-import com.moviles.clothingapp.viewmodel.WeatherViewModel
+import com.moviles.clothingapp.login.LoginViewModel
+import com.moviles.clothingapp.login.ResetPasswordViewModel
+import com.moviles.clothingapp.weatherBanner.WeatherViewModel
 import android.Manifest
 import android.os.Build
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
 import com.google.firebase.perf.FirebasePerformance
+import com.moviles.clothingapp.cart.CartViewModel
 
-
+/* The mainActivity initializes all the app */
 class MainActivity : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var loginViewModel: LoginViewModel
@@ -32,21 +32,41 @@ class MainActivity : ComponentActivity() {
     private lateinit var firebaseAnalytics: FirebaseAnalytics
     private var locationPermissionGranted = false
 
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        locationPermissionGranted = permissions.entries.all { it.value }
-        weatherViewModel = WeatherViewModel(this)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        /* Initialize Firebase services */
         auth = Firebase.auth
-        loginViewModel = LoginViewModel(auth)
-        resetPasswordViewModel = ResetPasswordViewModel(auth)
-        Log.d("FirebasePerf", "Firebase Performance Monitoring initialized: ${FirebasePerformance.getInstance()}")
         firebaseAnalytics = Firebase.analytics
 
+
+        /* Initialize Login ViewModel */
+        loginViewModel = LoginViewModel(auth)
+        resetPasswordViewModel = ResetPasswordViewModel(auth)
+        weatherViewModel = WeatherViewModel(this, hasLocationPermission = false)
+        val cartViewModel: CartViewModel by viewModels()
+
+
+
+        setContent {
+            val navController = rememberNavController()
+            AppNavigation(navController, loginViewModel, resetPasswordViewModel, weatherViewModel, cartViewModel)
+        }
+
+        /* Log device information and metrics for firebase */
+        logDeviceInfo()
+
+        /* Request location permissions */
+        requestLocationPermissions()
+
+
+    }
+
+
+    /* Auxiliary function to record device info in firebase */
+    private fun logDeviceInfo() {
+        Log.d("FirebasePerf", "Firebase Performance Monitoring initialized: ${FirebasePerformance.getInstance()}")
         val deviceInfo = Bundle().apply {
             putString("device_model", Build.MODEL)
             putString("device_brand", Build.BRAND)
@@ -54,15 +74,15 @@ class MainActivity : ComponentActivity() {
         }
 
         firebaseAnalytics.logEvent("device_info", deviceInfo)
-        Log.d("DEVICES", ""+deviceInfo)
+        Log.d("DEVICES", deviceInfo.toString())
+    }
 
-        // Request location permissions
-        requestLocationPermissions()
-
-        setContent {
-            val navController = rememberNavController()
-            AppNavigation(navController, loginViewModel, resetPasswordViewModel, weatherViewModel)
-        }
+    /* Auxiliary functions to request location permissions and initialize weatherViewModel to fetch data */
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val permissionGranted = permissions.entries.all { it.value }
+        weatherViewModel.updateLocationPermission(permissionGranted)
     }
 
     private fun requestLocationPermissions() {
@@ -72,11 +92,10 @@ class MainActivity : ComponentActivity() {
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED -> {
                 // Permissions already granted
-                locationPermissionGranted = true
-                weatherViewModel = WeatherViewModel(this)
+                weatherViewModel.updateLocationPermission(true)
             }
-
             else -> {
+                // Request permissions
                 requestPermissionLauncher.launch(
                     arrayOf(
                         Manifest.permission.ACCESS_FINE_LOCATION,
@@ -86,4 +105,5 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
 }

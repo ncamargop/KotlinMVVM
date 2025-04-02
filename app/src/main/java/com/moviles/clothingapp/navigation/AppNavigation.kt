@@ -2,27 +2,31 @@ package com.moviles.clothingapp.navigation
 
 import android.net.Uri
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.moviles.clothingapp.view.CreatePost.CameraScreen
-import com.moviles.clothingapp.view.CreatePost.CreatePostScreen
-import com.moviles.clothingapp.view.DetailedPost.DetailedPostScreen
-import com.moviles.clothingapp.view.Discover.DiscoverScreen
-import com.moviles.clothingapp.view.Discover.WeatherCategoryScreen
-import com.moviles.clothingapp.view.HomeView.MainScreen
-import com.moviles.clothingapp.view.Login.CreateAccountScreen
-import com.moviles.clothingapp.view.Login.LoginScreen
-import com.moviles.clothingapp.view.Login.ResetPasswordScreen
-import com.moviles.clothingapp.view.Map.MapScreen
-import com.moviles.clothingapp.viewmodel.HomeViewModel
-import com.moviles.clothingapp.viewmodel.LoginViewModel
-import com.moviles.clothingapp.viewmodel.PostViewModel
-import com.moviles.clothingapp.viewmodel.ResetPasswordViewModel
-import com.moviles.clothingapp.viewmodel.WeatherViewModel
+import com.moviles.clothingapp.cart.CartViewModel
+import com.moviles.clothingapp.cart.ui.CartScreen
+import com.moviles.clothingapp.createPost.ui.CameraScreen
+import com.moviles.clothingapp.createPost.ui.CreatePostScreen
+import com.moviles.clothingapp.post.ui.DetailedPostScreen
+import com.moviles.clothingapp.discover.ui.DiscoverScreen
+import com.moviles.clothingapp.weatherBanner.ui.WeatherCategoryScreen
+import com.moviles.clothingapp.home.ui.MainScreen
+import com.moviles.clothingapp.login.ui.CreateAccountScreen
+import com.moviles.clothingapp.login.ui.LoginScreen
+import com.moviles.clothingapp.login.ui.ResetPasswordScreen
+import com.moviles.clothingapp.map.ui.MapScreen
+import com.moviles.clothingapp.home.HomeViewModel
+import com.moviles.clothingapp.login.LoginViewModel
+import com.moviles.clothingapp.post.PostViewModel
+import com.moviles.clothingapp.login.ResetPasswordViewModel
+import com.moviles.clothingapp.weatherBanner.WeatherViewModel
 
 
 /* Navigation component called to change between pages
@@ -34,17 +38,21 @@ import com.moviles.clothingapp.viewmodel.WeatherViewModel
 fun AppNavigation(navController: NavHostController,
                   loginViewModel: LoginViewModel,
                   resetPasswordViewModel: ResetPasswordViewModel,
-                  weatherViewModel: WeatherViewModel
+                  weatherViewModel: WeatherViewModel,
+                  cartViewModel: CartViewModel
 ) {
 
+    /* Check if user is already logged in and navigate accordingly */
+    val isUserLoggedIn by loginViewModel.navigateToHome.collectAsState()
+
     /* Start navigation in login page. Route: login */
-    NavHost(navController = navController, startDestination = "login") {
+    NavHost(navController = navController, startDestination = if (isUserLoggedIn) "home" else "login") {
         composable("login") {
             LoginScreen(
                 loginViewModel = loginViewModel,
                 onNavigateToHome = {
                     navController.navigate("home") {
-                        popUpTo("login") { inclusive = true }
+                        popUpTo(0) { inclusive = true }
                     }
                 },
                 navController = navController,
@@ -98,9 +106,14 @@ fun AppNavigation(navController: NavHostController,
             DetailedPostScreen(
                 productId = postId,
                 viewModel = postViewModel,
+                cartViewModel,
                 onBack = { navController.popBackStack() },
-                onAddToCart = { /* lógica para agregar al carrito */ }
+                onNavigateToCart = { navController.navigate("cart")}
             )
+        }
+
+        composable("cart") {
+            CartScreen(navController = navController, cartViewModel)
         }
 
 
@@ -122,4 +135,6 @@ fun AppNavigation(navController: NavHostController,
 
 
     }
+
+
 }
